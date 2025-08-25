@@ -3,84 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to My Website!</title>
+    <title>My Website</title>
     <!-- Add Tailwind CSS for responsive styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
-      body {
-        font-family: 'Inter', sans-serif;
-      }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom CSS animations */
+        @keyframes fade-in-down {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(-15%);
+                animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+            }
+            50% {
+                transform: translateY(0);
+                animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+            }
+        }
+        /* Apply animations to classes */
+        .animate-fade-in-down {
+            animation: fade-in-down 1s ease-out forwards;
+        }
+        .animate-fade-in-up {
+            animation: fade-in-up 1s ease-out forwards;
+            animation-delay: 0.5s;
+        }
+        .animate-bounce {
+            animation: bounce 1s infinite;
+        }
+        /* A simple hover effect for the navigation links */
+        .nav-link:hover {
+            opacity: 0.8;
+            transform: scale(1.05);
+            transition: all 0.2s ease-in-out;
+        }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 flex items-center justify-center min-h-screen p-4">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 min-h-screen flex flex-col items-center p-4">
 
-    <!-- Main content container with responsive styling -->
-    <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl max-w-lg w-full text-center">
-        <!-- Main heading -->
-        <h1 class="text-5xl md:text-6xl font-extrabold text-blue-600 dark:text-blue-400 mb-4 animate-fade-in-down">
-            WELCOME
-        </h1>
+    <!-- Navigation bar at the top -->
+    <nav class="w-full max-w-lg mb-8 bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-lg flex justify-around">
+        <a href="#" class="nav-link text-lg md:text-xl font-bold text-blue-600 dark:text-blue-400" data-page="home">Home</a>
+        <a href="#" class="nav-link text-lg md:text-xl font-bold text-gray-600 dark:text-gray-300" data-page="test1">Test 1</a>
+        <a href="#" class="nav-link text-lg md:text-xl font-bold text-gray-600 dark:text-gray-300" data-page="test2">Test 2</a>
+    </nav>
 
-        <!-- Paragraph text -->
-        <p class="text-lg md:text-xl font-medium text-gray-700 dark:text-gray-300 mb-6 animate-fade-in-up">
-            This is my spanking new website. Hope you like it.
-        </p>
-
-        <!-- A small animated emoji to add some visual flair -->
-        <span class="text-4xl animate-bounce">
-            ✨
-        </span>
+    <!-- Main content container where content will be loaded -->
+    <div id="content-container" class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl max-w-lg w-full text-center">
+        <!-- Content will be dynamically injected here by JavaScript -->
     </div>
 
-    <!-- Simple CSS animations for a nicer feel -->
-    <style>
-      @keyframes fade-in-down {
-        from {
-          opacity: 0;
-          transform: translateY(-20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
+    <script>
+        // Get references to the DOM elements we need to interact with
+        const contentContainer = document.getElementById('content-container');
+        const navLinks = document.querySelectorAll('.nav-link');
 
-      @keyframes fade-in-up {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
+        // Function to render the correct content based on the page name
+        function renderContent(pageName) {
+            let content = '';
+
+            // Use a switch statement to determine which page's content to display
+            switch(pageName) {
+                case 'home':
+                    content = `
+                        <h1 class="text-5xl md:text-6xl font-extrabold text-blue-600 dark:text-blue-400 mb-4 animate-fade-in-down">
+                            WELCOME
+                        </h1>
+                        <p class="text-lg md:text-xl font-medium text-gray-700 dark:text-gray-300 mb-6 animate-fade-in-up">
+                            This is my spanking new website. Hope you like it.
+                        </p>
+                        <span class="text-4xl animate-bounce">
+                            ✨
+                        </span>
+                    `;
+                    break;
+                case 'test1':
+                    content = `
+                        <h1 class="text-5xl md:text-6xl font-extrabold text-blue-600 dark:text-blue-400 mb-4 animate-fade-in-down">
+                            Hi
+                        </h1>
+                    `;
+                    break;
+                case 'test2':
+                    content = `
+                        <h1 class="text-5xl md:text-6xl font-extrabold text-blue-600 dark:text-blue-400 mb-4 animate-fade-in-down">
+                            How are you?
+                        </h1>
+                    `;
+                    break;
+                default:
+                    content = `<p class="text-xl text-red-500">Page not found.</p>`;
+            }
+
+            // Update the content container's inner HTML with the new content
+            contentContainer.innerHTML = content;
+
+            // Update the active link styling
+            navLinks.forEach(link => {
+                if (link.dataset.page === pageName) {
+                    link.classList.remove('text-gray-600', 'dark:text-gray-300');
+                    link.classList.add('text-blue-600', 'dark:text-blue-400');
+                } else {
+                    link.classList.remove('text-blue-600', 'dark:text-blue-400');
+                    link.classList.add('text-gray-600', 'dark:text-gray-300');
+                }
+            });
         }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
 
-      @keyframes bounce {
-        0%, 100% {
-          transform: translateY(-15%);
-          animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
-        }
-        50% {
-          transform: translateY(0);
-          animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
-        }
-      }
+        // Add a click event listener to each navigation link
+        navLinks.forEach(link => {
+            link.addEventListener('click', (event) => {
+                // Prevent the default link behavior (page reload)
+                event.preventDefault();
+                // Get the page name from the data attribute and render the new content
+                const page = event.target.dataset.page;
+                renderContent(page);
+            });
+        });
 
-      .animate-fade-in-down {
-        animation: fade-in-down 1s ease-out forwards;
-      }
-
-      .animate-fade-in-up {
-        animation: fade-in-up 1s ease-out forwards;
-        animation-delay: 0.5s;
-      }
-
-      .animate-bounce {
-        animation: bounce 1s infinite;
-      }
-    </style>
-
+        // Load the 'home' page by default when the website loads
+        window.onload = () => {
+            renderContent('home');
+        };
+    </script>
 </body>
 </html>
